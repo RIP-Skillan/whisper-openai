@@ -13,6 +13,7 @@ from .decoding import DecodingOptions, DecodingResult, decode, detect_language
 from .model import ModelDimensions, Whisper
 from .transcribe import transcribe
 from .version import __version__
+from pkg_resources import packaging
 
 _MODELS = {
     "tiny.en": "https://openaipublic.azureedge.net/main/whisper/models/d3dd57d32accea0b295c96e26691aa14d8822fac7d9d27d5dc00b4ca2826dd03/tiny.en.pt",
@@ -147,7 +148,7 @@ def load_model(
     with (
         io.BytesIO(checkpoint_file) if in_memory else open(checkpoint_file, "rb")
     ) as fp:
-        kwargs = {"weights_only": True} if torch.__version__ >= "1.13" else {}
+        kwargs = {"weights_only": True} if packaging.version.parse(torch.__version__ ) >= packaging.version.parse("1.13") else {}
         checkpoint = torch.load(fp, map_location=device, **kwargs)
     del checkpoint_file
 
